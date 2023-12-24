@@ -1,35 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import users from "./data";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [people, setPeople] = useState(users);
+
+  function remove(id) {
+    const newPeople = people.filter((person) => person.id !== id);
+    setPeople(newPeople);
+  }
+
+  const clear = () => {
+    setPeople([]);
+  };
+
+  const reset = () => {
+    setPeople(users);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <main>
+      {people.map((user, index) => {
+        const { name, id, location } = user;
+        return (
+          <div key={id}>
+            <h2>{`[${index + 1}] ${name}`}</h2>
+            <h3>{location}</h3>
+            <button type="button" onClick={() => remove(id)}>
+              Remove
+            </button>
+          </div>
+        );
+      })}
+
+      <hr />
+
+      {people.length < 1 ? (
+        <button type="button" onClick={reset}>
+          Reset List
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      ) : (
+        <button type="button" onClick={clear}>
+          Clear List
+        </button>
+      )}
+    </main>
+  );
 }
 
-export default App
+export default App;
