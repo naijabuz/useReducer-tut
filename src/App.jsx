@@ -1,26 +1,32 @@
-import { useState } from "react";
-import users from "./data";
+import { useState, useReducer } from "react";
+// import users from "./data";
 import "./App.css";
+import { appReducer, initialState } from "./reducer/globalReducer";
+import types from "./reducer/actionTypes";
 
 function App() {
-  const [people, setPeople] = useState(users);
+  // const [people, setPeople] = useState(users);
+  const [state, dispatch] = useReducer(appReducer, initialState);
 
   function remove(id) {
-    const newPeople = people.filter((person) => person.id !== id);
-    setPeople(newPeople);
+    dispatch({ type: types.REMOVE_PERSON, payload: { id } });
+    // const newPeople = people.filter((person) => person.id !== id);
+    // setPeople(newPeople);
   }
 
   const clear = () => {
-    setPeople([]);
+    dispatch({ type: types.CLEAR_LIST });
+    // setPeople([]);
   };
 
   const reset = () => {
-    setPeople(users);
+    dispatch({ type: types.RESET_LIST });
+    // setPeople(users);
   };
 
   return (
     <main>
-      {people.map((user, index) => {
+      {state.people.map((user, index) => {
         const { name, id, location } = user;
         return (
           <div key={id}>
@@ -35,7 +41,7 @@ function App() {
 
       <hr />
 
-      {people.length < 1 ? (
+      {state.people.length < 1 ? (
         <button type="button" onClick={reset}>
           Reset List
         </button>
